@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre_tec: MyString
+  apellido_pat_tec: MyString
+  apellido_mat_tec: MyString
+  rut_tec: 
+  sexo_tec: false
+  fecha_nac_tec: 2014-12-02
+  email_tec: MyString
+  foto_tec: MyString
+
+two:
+  nombre_tec: MyString
+  apellido_pat_tec: MyString
+  apellido_mat_tec: MyString
+  rut_tec: 
+  sexo_tec: false
+  fecha_nac_tec: 2014-12-02
+  email_tec: MyString
+  foto_tec: MyString

@@ -1,0 +1,49 @@
+<%= form_for(@jugador) do |f| %>
+  <% if @jugador.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@jugador.errors.count, "error") %> prohibited this jugador from being saved:</h2>
+
+      <ul>
+      <% @jugador.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nombre_jug %><br>
+    <%= f.text_field :nombre_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :apellido_pat_jug %><br>
+    <%= f.text_field :apellido_pat_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :apellido_mat_jug %><br>
+    <%= f.text_field :apellido_mat_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :rut_jug %><br>
+    <%= f.text_field :rut_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :sexo_jug %><br>
+    <%= f.check_box :sexo_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :fecha_nac_jug %><br>
+    <%= f.date_select :fecha_nac_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :email_jug %><br>
+    <%= f.text_field :email_jug %>
+  </div>
+  <div class="field">
+    <%= f.label :foto_jug %><br>
+    <%= f.text_field :foto_jug %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

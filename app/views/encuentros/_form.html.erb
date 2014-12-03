@@ -1,0 +1,69 @@
+<%= form_for(@encuentro) do |f| %>
+  <% if @encuentro.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@encuentro.errors.count, "error") %> prohibited this encuentro from being saved:</h2>
+
+      <ul>
+      <% @encuentro.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :fecha_enc %><br>
+    <%= f.datetime_select :fecha_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :tiro_libre_local_enc %><br>
+    <%= f.number_field :tiro_libre_local_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :tiro_esquina_local_enc %><br>
+    <%= f.number_field :tiro_esquina_local_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :fuera_de_juego_local_enc %><br>
+    <%= f.number_field :fuera_de_juego_local_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :tiro_libre_visita_enc %><br>
+    <%= f.number_field :tiro_libre_visita_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :tiro_esquina_visita_enc %><br>
+    <%= f.number_field :tiro_esquina_visita_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :fuera_de_juego_visita_enc %><br>
+    <%= f.number_field :fuera_de_juego_visita_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :duracion_enc %><br>
+    <%= f.text_field :duracion_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :cant_publico_enc %><br>
+    <%= f.number_field :cant_publico_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :gol_local_enc %><br>
+    <%= f.number_field :gol_local_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :gol_visita_enc %><br>
+    <%= f.number_field :gol_visita_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :def_penales_enc %><br>
+    <%= f.check_box :def_penales_enc %>
+  </div>
+  <div class="field">
+    <%= f.label :estado_enc %><br>
+    <%= f.text_field :estado_enc %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

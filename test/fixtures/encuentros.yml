@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fecha_enc: 2014-12-01 19:39:27
+  tiro_libre_local_enc: 1
+  tiro_esquina_local_enc: 1
+  fuera_de_juego_local_enc: 1
+  tiro_libre_visita_enc: 1
+  tiro_esquina_visita_enc: 1
+  fuera_de_juego_visita_enc: 1
+  duracion_enc: MyString
+  cant_publico_enc: 1
+  gol_local_enc: 1
+  gol_visita_enc: 1
+  def_penales_enc: false
+  estado_enc: MyString
+
+two:
+  fecha_enc: 2014-12-01 19:39:27
+  tiro_libre_local_enc: 1
+  tiro_esquina_local_enc: 1
+  fuera_de_juego_local_enc: 1
+  tiro_libre_visita_enc: 1
+  tiro_esquina_visita_enc: 1
+  fuera_de_juego_visita_enc: 1
+  duracion_enc: MyString
+  cant_publico_enc: 1
+  gol_local_enc: 1
+  gol_visita_enc: 1
+  def_penales_enc: false
+  estado_enc: MyString

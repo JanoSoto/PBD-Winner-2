@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rol_tecnico_id: 
+  participante_competencium_id: 
+  tecnico_references: MyString
+
+two:
+  rol_tecnico_id: 
+  participante_competencium_id: 
+  tecnico_references: MyString
