@@ -22,11 +22,15 @@
 							<li>Puede ser formato csv, Excel o Libre Oficce</li>
 							<li>La primera fila del archivo debe contener las cabeceras <b>Nombre</b> y <b>Pais</b>, tal cual están escritos</li>
 							<li>Ningún campo puede estar vacío</li>
+							<li>La cantidad de participantes debe ser igual a la indicada en el Paso 1</li>
 						</ul>
 					</div>
 					<% if @alert %>
 						<div class="alert alert-danger" role="alert">
 							<b>ERROR: </b><%= @alert %>
+							<% if @noCoinciden %>
+								 <p><a class="btn btn-danger" href="/nueva_competencia/paso1">Ir al paso 1</a></p>
+							<% end %>
 						</div>
 					<% end %>
 					<%= form_tag("/nueva_competencia/paso3", multipart: true) do %>

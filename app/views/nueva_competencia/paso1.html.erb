@@ -34,12 +34,12 @@
 					<%= form_tag("/nueva_competencia/paso1", method: "post") do %>
 						<div class="field">
 							<%= label_tag(:nombre_competencia, "Nombre de la competencia: ") %>
-							<%= text_field_tag(:nombre_competencia, nil, placeholder: 'Nombre', required: true, class: "form-control", maxlength: "250") %>
+							<%= text_field_tag(:nombre_competencia, $nombre_competencia, placeholder: 'Nombre', required: true, class: "form-control", maxlength: "250") %>
 						</div>
 						<div class="field">
 							<%= label_tag(:desc_competencia, "Descripción de la competencia: ") %>
 							<br>
-							<%= text_area_tag(:desc_competencia, nil, placeholder: 'Describa brevemente la competencia, en máximo 250 caracteres...', size: "40x4", required: true, maxlength: "250",class: "form-control") %>
+							<%= text_area_tag(:desc_competencia, $desc_competencia, placeholder: 'Describa brevemente la competencia, en máximo 250 caracteres...', size: "40x4", required: true, maxlength: "250",class: "form-control") %>
 						</div>
 						<div class="field" id="tipo_competencia">
 							<%= label_tag(:tipo, "Tipo de competencia: ")%>

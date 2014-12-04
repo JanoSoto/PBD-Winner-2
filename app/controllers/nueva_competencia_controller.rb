@@ -1,4 +1,4 @@
- # encoding: UTF-8
+ # encoding: UTF-8 
 class NuevaCompetenciaController < ApplicationController
 	@volver = false
 	def paso1
@@ -90,10 +90,13 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$participantes.each do |participante|
 			if participante['Nombre'] == nil || participante['Pais'] == nil
 				campo_vacio = true
+			elsif participante['Nombre'] =~ /^([A-Z]|[a-z]|\d)*/ || participante['Pais'] =~ /^([A-Z]|[a-z])*/
+				campo_invalido = true
 			end
 		end
 
@@ -111,7 +114,7 @@ class NuevaCompetenciaController < ApplicationController
 				end
 			end
 		end
-		$cant_participantes = $participantes.length
+		#$cant_participantes = $participantes.length
 		$participantes.sort! {|x,y| x['Nombre'] <=> y['Nombre']}
 
 		if request.post?
@@ -119,6 +122,11 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay nombres de participantes que están repetidos'
+			elsif $cant_participantes.to_i != $participantes.length
+				@alert = 'La cantidad de participantes del archivo no coincide con la indicada en un principio. Cantidad indicada: '+$cant_participantes.to_s+'  - Cantidad en el archivo: '+$participantes.length.to_s
+				@noCoinciden = true	
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. El nombre no puede contener caracteres especiales y el país no puede contener números o caracteres especiales'	
 			else
 				redirect_to action: 'paso4'
 			end
@@ -135,15 +143,18 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$jugadores.each do |jugador|
 			puts jugador
 			if jugador['Institucion Deportiva'] == nil || jugador['Nombre'] == nil || jugador['Apellido Paterno'] == nil || jugador['Apellido Materno'] == nil || jugador['RUT'] == nil || jugador['Sexo'] == nil || jugador['Fecha nacimiento'] == nil || jugador['Email'] == nil
 				campo_vacio = true
+			elsif jugador['Nombre'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Paterno'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Materno'] =~ /^([A-Z]|[a-z])*/ || jugador['Sexo'] =~ /^M{1}|F{1}/ || jugador['RUT'] =~ /^\d{8}-(\d|k)/ || jugador['Fecha nacimiento'] =~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || jugador['Email'] =~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true	
 			end
 		end
 
-
+		#VERIFICA QUE NO HAYAN REPETIDOS
 		if $jugadores != [] && $jugadores != nil
 			for i in (0..$jugadores.length-1)
 				for j in(i+1..$jugadores.length)
@@ -166,6 +177,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay jugadores que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'	
 			else
 				redirect_to action: 'paso5'
 			end
@@ -182,11 +195,14 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$entrenadores.each do |entrenador|
 			puts entrenador
 			if entrenador['Institucion Deportiva'] == nil || entrenador['Nombre'] == nil || entrenador['Apellido Paterno'] == nil || entrenador['Apellido Materno'] == nil || entrenador['RUT'] == nil || entrenador['Sexo'] == nil || entrenador['Fecha nacimiento'] == nil || entrenador['Email'] == nil
 				campo_vacio = true
+			elsif jugador['Nombre'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Paterno'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Materno'] =~ /^([A-Z]|[a-z])*/ || jugador['Sexo'] =~ /^M{1}|F{1}/ || jugador['RUT'] =~ /^\d{8}-(\d|k)/ || jugador['Fecha nacimiento'] =~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || jugador['Email'] =~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true
 			end
 		end
 
@@ -210,6 +226,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay entrenadores que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'
 			else
 				redirect_to action: 'paso6'
 			end
@@ -226,11 +244,14 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$jueces.each do |juez|
 			puts juez
 			if juez['Nombre'] == nil || juez['Apellido Paterno'] == nil || juez['Apellido Materno'] == nil || juez['RUT'] == nil || juez['Sexo'] == nil || juez['Fecha nacimiento'] == nil || juez['Email'] == nil
 				campo_vacio = true
+			elsif jugador['Nombre'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Paterno'] =~ /^([A-Z]|[a-z])*/ || jugador['Apellido Materno'] =~ /^([A-Z]|[a-z])*/ || jugador['Sexo'] =~ /^M{1}|F{1}/ || jugador['RUT'] =~ /^\d{8}-(\d|k)/ || jugador['Fecha nacimiento'] =~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || jugador['Email'] =~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true
 			end
 		end
 
@@ -254,6 +275,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay jueces que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'
 			else
 				redirect_to action: 'paso7'
 			end
@@ -270,11 +293,14 @@ class NuevaCompetenciaController < ApplicationController
 		
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$recintos.each do |recinto|
 			puts recinto
 			if recinto['Nombre'] == nil || recinto['Ciudad'] == nil || recinto['Pais'] == nil || recinto['Capacidad'] == nil 
 				campo_vacio = true
+			elsif recinto['Nombre'] =~ /^([A-Z]|[a-z])*/ || recinto['Ciudad'] =~ /^([A-Z]|[a-z])*/ || recinto['Pais'] == /^([A-Z]|[a-z])*/ || recinto['Capacidad'] == /^\d*/ 
+				campo_invalido = true					
 			end
 		end
 
@@ -298,6 +324,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay recintos deportivos que están registrados dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Los campos Nombre, Ciudad y País no pueden contener números ni caracteres especiales. La cantidad debe ser expresada sólo en números naturales'	
 			else
 				redirect_to action: 'paso8'
 			end
