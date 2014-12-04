@@ -38,11 +38,8 @@
 							<p><b>Cantidad total de recintos deportivos:</b> <%= $recintos.length%></p>
 						</div>
 
-						<% if disable_part %>
-							<%= submit_tag("Generar fixture", data: { confirm: "La cantidad de participantes que usted indicó en un principio no coinciden con los obtenidos desde el documento cargado en el sistema.\n\n¿Desea continuar de todas formas?\n\nSi desea continuar, se considerarán sólo los datos obtenidos desde el archivo." }) %>
-						<% else %>
 							<%= submit_tag("Generar fixture") %>
-						<% end %>
+						
 					<% end %>
 
 				</div>

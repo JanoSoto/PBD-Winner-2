@@ -146,7 +146,6 @@ class NuevaCompetenciaController < ApplicationController
 		campo_invalido = false
 
 		$jugadores.each do |jugador|
-			puts jugador
 			if jugador['Institucion Deportiva'] == nil || jugador['Nombre'] == nil || jugador['Apellido Paterno'] == nil || jugador['Apellido Materno'] == nil || jugador['RUT'] == nil || jugador['Sexo'] == nil || jugador['Fecha nacimiento'] == nil || jugador['Email'] == nil
 				campo_vacio = true
 			elsif jugador['Nombre'] !~ /^([A-Z]|[a-z])*/ || jugador['Apellido Paterno'] !~ /^([A-Z]|[a-z])*/ || jugador['Apellido Materno'] !~ /^([A-Z]|[a-z])*/ || jugador['Sexo'] !~ /^M{1}|F{1}/ || jugador['RUT'] !~ /^\d{8}-(\d|k)/ || jugador['Fecha nacimiento'] !~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || jugador['Email'] !~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
@@ -213,7 +212,6 @@ class NuevaCompetenciaController < ApplicationController
 		campo_invalido = false
 
 		$entrenadores.each do |entrenador|
-			puts entrenador
 			if entrenador['Institucion Deportiva'] == nil || entrenador['Nombre'] == nil || entrenador['Apellido Paterno'] == nil || entrenador['Apellido Materno'] == nil || entrenador['RUT'] == nil || entrenador['Sexo'] == nil || entrenador['Fecha nacimiento'] == nil || entrenador['Email'] == nil
 				campo_vacio = true
 			elsif entrenador['Nombre'] !~ /^([A-Z]|[a-z])*/ || entrenador['Apellido Paterno'] !~ /^([A-Z]|[a-z])*/ || entrenador['Apellido Materno'] !~ /^([A-Z]|[a-z])*/ || entrenador['Sexo'] !~ /^M{1}|F{1}/ || entrenador['RUT'] !~ /^\d{8}-(\d|k)/ || entrenador['Fecha nacimiento'] !~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || entrenador['Email'] !~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
@@ -326,7 +324,6 @@ class NuevaCompetenciaController < ApplicationController
 		campo_invalido = false
 
 		$recintos.each do |recinto|
-			puts recinto
 			if recinto['Nombre'] == nil || recinto['Ciudad'] == nil || recinto['Pais'] == nil || recinto['Capacidad'] == nil 
 				campo_vacio = true
 			elsif recinto['Nombre'] !~ /^([A-Z]|[a-z])*/ || recinto['Ciudad'] !~ /^([A-Z]|[a-z])*/ || recinto['Pais'] !~ /^([A-Z]|[a-z])*/ || recinto['Capacidad'] !~ /^\d*/ 
@@ -585,7 +582,7 @@ class NuevaCompetenciaController < ApplicationController
 					iteracion1 = false
 				end
 
-
+				#REGISTRO DE LOS ENCUENTROS
 				i = 0
 				$fixture.each do |fecha|
 					fecha.each do |encuentro|
@@ -613,6 +610,62 @@ class NuevaCompetenciaController < ApplicationController
 			
 
 			elsif $tipo_competencia == "torneo"
+				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES
+				ids_etapas = Array.new
+				ids_aux = Array.new
+				id_etapa_siguiente = nil
+				for i in(0..$cant_fases.to_i-1)
+					cont = 1
+					(2**i).times do 
+						etapa = Etapa.new
+						if i == 0
+							etapa.nombre_etp = "Final"
+						elsif i == 1
+							etapa.nombre_etp = "Semi Final"
+						elsif i == 2
+							etapa.nombre_etp = "Cuartos de Final"
+						elsif i == 3
+							etapa.nombre_etp = "Octavos de Final"
+						elsif i == 4 
+							etapa.nombre_etp = "16avos de Final"
+						elsif i == 5
+							etapa.nombre_etp = "32avos de Final"				
+						end
+						etapa.tipo_etp = 0
+						etapa.competencia_id = competencia.id
+						if cont%2 == 1
+							etapa.etapa_id = ids_aux[0]
+							cont += 1
+						elsif cont%2 == 0
+							etapa.etapa_id = ids_aux.shift
+							cont += 1
+						end	
+						etapa.save
+						ids_aux.push(etapa.id)
+						puts 2**i
+						puts 2**$cant_fases.to_i-2
+						puts '******************************************'
+						if 2**i == 2**($cant_fases.to_i-1)
+							puts '------------------------------------------------'
+							ids_etapas.push({'id'=>etapa.id, 'nombre'=>etapa.nombre_etp})
+						end
+					end
+					id_etapa_siguiente = etapa.id
+				end
+
+				#REGISTRO DE LOS ENCUENTROS
+				contAux = 0
+				for i in(0..ids_etapas.length-1)
+					nuevo_encuentro = Encuentro.new						
+					nuevo_encuentro.id_local = ids_participantes[contAux]['id']
+					contAux += 1	
+					nuevo_encuentro.id_visita = ids_participantes[contAux]['id']
+					contAux += 1
+					nuevo_encuentro.competencia_id = competencia.id
+					nuevo_encuentro.etapa_id = ids_etapas[i]['id']
+					nuevo_encuentro.estado_enc = "POR JUGAR"
+					nuevo_encuentro.save
+				end
 
 			else
 
