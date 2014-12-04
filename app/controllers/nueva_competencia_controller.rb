@@ -39,9 +39,9 @@ class NuevaCompetenciaController < ApplicationController
 		if request.post?
 			if $fecha_fin < $fecha_inicio
 				@alert = 'La fecha de inicio es posterior a la fecha de fin. Por favor, ingrese un fecha valida'
-			elsif $cant_grupos != 0 && $cant_participantes % $cant_grupos != 0
+			elsif $cant_grupos.to_i != 0 && $cant_participantes.to_i % $cant_grupos.to_i != 0
 				@alert = 'La cantidad de grupos no coincide con la cantidad de participantes. Es estrictamente necesario que cada grupo tenga la misma cantidad de participantes.'
-			elsif $cant_grupos != 0 && $cant_clasificados.to_i > $cant_participantes.to_i/$cant_grupos.to_i-1
+			elsif $cant_grupos.to_i != 0 && $cant_clasificados.to_i > $cant_participantes.to_i/$cant_grupos.to_i-1
 				@alert = 'La cantidad de clasificados no puede ser mayor o igual que la cantidad de participantes por grupo'
 			else
 				redirect_to action: 'paso2'
@@ -524,7 +524,7 @@ class NuevaCompetenciaController < ApplicationController
 
 			
 
-			#GENERACIÓN DEL FIXTURE
+			#COMPETENCIA DE TIPO LIGA
 			if $tipo_competencia == "liga"
 				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES
 				$ids_etapas = Array.new
@@ -608,9 +608,9 @@ class NuevaCompetenciaController < ApplicationController
 					i += 1
 				end
 			
-
+			#COMPETENCIA DE TIPO TORNEO
 			elsif $tipo_competencia == "torneo"
-				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES
+				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES Y GENERACIÓN DEL FIXTURE
 				ids_etapas = Array.new
 				ids_aux = Array.new
 				id_etapa_siguiente = nil
@@ -642,11 +642,7 @@ class NuevaCompetenciaController < ApplicationController
 						end	
 						etapa.save
 						ids_aux.push(etapa.id)
-						puts 2**i
-						puts 2**$cant_fases.to_i-2
-						puts '******************************************'
 						if 2**i == 2**($cant_fases.to_i-1)
-							puts '------------------------------------------------'
 							ids_etapas.push({'id'=>etapa.id, 'nombre'=>etapa.nombre_etp})
 						end
 					end
@@ -667,8 +663,113 @@ class NuevaCompetenciaController < ApplicationController
 					nuevo_encuentro.save
 				end
 
+			#COMPETENCIAS DE TIPO COPA
 			else
+				#SEPARACIÓN DE LOS GRUPOS
+				part_por_grupo = $cant_participantes.to_i/$cant_grupos.to_i
+				$grupos_copa = Array.new($cant_grupos.to_i){Array.new}
+				contAux = 0
+				$grupos_copa.each do |grupo|
+					part_por_grupo.times do
+						grupo.push(ids_participantes[contAux])
+						contAux += 1
+					end
+				end
 
+				contAux = 1
+				$grupos_copa.each do |grupo|
+					grupo.each do |participante|
+						part_aux = ParticipanteCompetencium.find_by(participante_id: participante['id'])
+						part_aux.grupo_par_com = contAux
+						part_aux.save
+					end
+					contAux += 1
+				end
+
+				cant_part_por_grupo = 0
+				$fixture_grupo = Array.new
+				$grupos_copa.each do |grupo|
+					#GENERACIÓN DEL FIXTURE DE CADA GRUPO EN UNA MATRIZ
+					if part_por_grupo % 2 == 0
+						cant_part_por_grupo = part_por_grupo-1
+					else
+						cant_part_por_grupo = part_por_grupo
+					end
+							
+					fixture_aux = Array.new(cant_part_por_grupo) {Array.new(grupo.length/2){Array.new(2)}}
+					equipo1 = grupo.length-2
+					equipo2 = 0
+					alterna = true
+					
+					fixture_aux.each do |fecha|
+						iteracion1 = true
+						fecha.each do |encuentro|
+							if iteracion1
+								if alterna							
+									encuentro[0] = grupo[equipo1]	
+									equipo1 -= 1
+									encuentro[1] = grupo[grupo.length-1]
+									alterna = false
+								else
+									encuentro[1] = grupo[equipo1]	
+									equipo1 -= 1
+									encuentro[0] = grupo[grupo.length-1]
+									alterna = true
+								end
+								iteracion1 = false
+							else
+								encuentro[0] = grupo[equipo1]	
+								equipo1 -= 1
+								encuentro[1] = grupo[equipo2]
+								equipo2 += 1
+							end
+
+							if equipo1 < 0
+								equipo1 = grupo.length-2
+							end
+							if equipo2 > grupo.length-2
+								equipo2 = 0
+							end
+						end
+						iteracion1 = false
+					end
+					fixture_aux.each do |fase|
+					end
+					$fixture_grupo.push(fixture_aux)
+				end
+
+				#CREACIÓN DE LAS ETAPAS DE LA FASE DE GRUPOS
+				numFase = cant_part_por_grupo
+				fecha_siguiente = nil
+				ids_fechas_copa = Array.new
+				cant_part_por_grupo.times do
+					nueva_fase = Etapa.new
+					nueva_fase.nombre_etp = "Fecha "+numFase.to_s+"- Fase de Grupos"
+					nueva_fase.tipo_etp = 0
+					nueva_fase.competencia_id = competencia.id
+					nueva_fase.etapa_id = fecha_siguiente
+					nueva_fase.save
+					ids_fechas_copa.push(nueva_fase.id)
+					fecha_siguiente = nueva_fase.id
+					numFase -= 1
+				end
+
+				#REGISTRO DE LOS ENCUENTROS
+				$fixture_grupo.each do |fixture|
+						i = 0
+					fixture.each do |fecha|
+						fecha.each do |encuentro|
+							nuevo_encuentro = Encuentro.new
+							nuevo_encuentro.id_local = encuentro[0]['id']
+							nuevo_encuentro.id_visita = encuentro[1]['id']
+							nuevo_encuentro.competencia_id = competencia.id
+							nuevo_encuentro.etapa_id = ids_fechas_copa[i]
+							nuevo_encuentro.estado_enc = "POR JUGAR"
+							nuevo_encuentro.save
+						end
+							i += 1
+					end  
+				end
 			end
 					
 			redirect_to action: 'paso9'

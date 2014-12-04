@@ -1,12 +1,28 @@
 <div>
+	<b><%= $fixture_grupo.length %></b>
 	<% i = 1 %>
-	<%#= $ids_etapas %>
-	<%# $fixture.each do |fecha| %>
-		<p>FECHA <#%= i %></p>
-		<%# fecha.each do |encuentro| %>
-			<p><%#= encuentro[0] %> vs <%#= encuentro[1]%></p>
-		<%# end %>	
-		<%# i += 1 %>
-	<%# end %>
+	<% $fixture_grupo.each do |fixture| %>
+		<% j = 1 %>
+		<p>FIXTURE GRUPO <%= i %></p>
+		<% fixture.each do |fecha| %>
+			<p>FECHA <%= j %></p>
+			<% k = 1 %>
+			<% fecha.each do |encuentro| %>
+				<p>ENCUENTRO <%= k %></p>
+				<p><%= encuentro[0] %> vs <%= encuentro[1] %></p>
+				<% k += 1 %>
+			<% end %>
+			<% j += 1 %>
+		<% end %> 
+	<% i += 1 %>
+	<% end %>
 
+	<%# for i in(0..$fixture_grupo.length-1) %>
+		<%# for j in(0..3) %>
+			<!--p><b>i: <%#= i %>, j: <%#= j %></b></p>
+			<%#= $fixture_grupo[j][i] %>
+			<hr>
+		<%# end %>
+		<hr><hr><hr-->
+	<%# end %>
 </div>
