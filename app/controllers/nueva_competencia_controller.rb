@@ -71,7 +71,7 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'La cantidad máxima de jugadores es inferior a la cantidad de jugadores titulares más la cantidad de jugadores en banca'	
 			elsif $cant_cambios.to_i > $cant_banca.to_i
 				@alert = 'La cantidad máxima de cambios permitidos es mayor que la cantidad de jugadores en banca'
-			elsif @volver
+			elsif @volver_paso1
 				redirect_to action: 'paso1'
 			else
 				redirect_to action: 'paso3'

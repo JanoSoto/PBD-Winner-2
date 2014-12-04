@@ -10,6 +10,7 @@
 
 <div class="container">
 	<div class="row">
+		<% if $nombre_competencia != nil && $tipo_competencia != nil && $ida_vuelta != nil && $cant_participantes != nil && $cant_grupos != nil && $fecha_inicio != nil && $fecha_fin != nil && $privacidad != nil && $participantes != nil && $jugadores != nil && $entrenadores != nil && $jueces != nil && $recintos != nil %>
 		<div class="col-md-7">
 			<div class="formulario-creacion panel panel-default">
 				<div class="panel-heading">
@@ -18,13 +19,7 @@
 				<div class="panel-body">
 					<%= form_tag("/nueva_competencia/paso8") do %>
 						<div class="field">
-							<div><b>Cantidad total de participantes:</b> <%= $participantes.length %></div>		
-							<% if $cant_participantes != $participantes.length %>
-								<% disable_part = true %>
-								<h5><span id="alerta" class="label label-warning">    
-									La cantidad de participantes en el archivo es distinta a la indicada en un principio
-								</span></h5>
-							<% end %>
+							<div><b>Cantidad total de participantes:</b> <%= $cant_participantes %></div>		
 						</div>
 
 						<div class="field">
@@ -223,6 +218,15 @@
 				</div>
 			</div>
 		</div>
+		<% else %>
+			<div class="col-md-12">
+				<div class="alert alert-warning">
+					<h3><b>¡Atención!</b>  Hay pasos previos que aún no se han realizado</h3>
+					<% @volver_paso1 = true %>
+					<a href="/nueva_competencia/paso1" class="btn btn-warning">Volver al inicio</a>
+				</div>
+			</div>
+		<% end %>
 	</div>
 </div>
 
