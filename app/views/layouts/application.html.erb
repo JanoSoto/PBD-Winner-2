@@ -93,31 +93,36 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
 	  </div><!--/row-->
-	  <div class="row anuncios">
-			<div class="col-lg-3 anuncio-item">
-				<%= link_to image_tag("anuncio1.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Pepsi Twist"), "/path1"  %>
-			</div>
-			<div class="col-lg-3 anuncio-item">
-				  <%= link_to image_tag("anuncio2.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Nike Training"), "/path1"  %>
-			</div>
-			<div class="col-lg-3 anuncio-item">
-				  <%= link_to image_tag("anuncio3.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Adidas history"), "/path1"  %>
-			</div>
-			<div class="col-lg-3 anuncio-item">
-				  <%= link_to image_tag("anuncio4.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Adidas history"), "/path1"  %>
-			</div>
-	  </div><!--/row-->
-    </div> <!-- /container -->
+	</div>
+	</div>
+    <div class="container">
+		<div class="col-md-12">
+		  <div class="row anuncios">
+				<div class="col-md-3 anuncio-item">
+					<%= link_to image_tag("anuncio1.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Pepsi Twist"), "/path1"  %>
+				</div>
+				<div class="col-md-3 anuncio-item">
+					  <%= link_to image_tag("anuncio2.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Nike Training"), "/path1"  %>
+				</div>
+				<div class="col-md-3 anuncio-item">
+					  <%= link_to image_tag("anuncio3.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Adidas history"), "/path1"  %>
+				</div>
+				<div class="col-md-3 anuncio-item">
+					  <%= link_to image_tag("anuncio4.jpg", :class=>"img-responsive img-rounded anuncio", :alt=>"Adidas history"), "/path1"  %>
+				</div>
+		  </div><!--/row anuncios-->
+		</div><!--/col-md-->
+    </div> <!--/container -->
 
       <footer class="footer">
-	<div class="container">
-	   <p class="text-muted">&copy; Winner 2014</p>
-	</div>
+		<div class="container">
+		   <p class="text-muted">&copy; Winner 2014</p>
+		</div>
       </footer>
 
   </body>
