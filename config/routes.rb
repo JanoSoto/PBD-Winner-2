@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :rol_jueces
+
+  resources :jueces
+
   resources :equipos
 
   resources :participante_competencia
