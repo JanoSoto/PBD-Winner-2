@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141203211552) do
+ActiveRecord::Schema.define(version: 20141204225841) do
 
   create_table "competencia", force: true do |t|
     t.string   "nombre_comp"
@@ -99,6 +99,19 @@ ActiveRecord::Schema.define(version: 20141203211552) do
   add_index "etapas", ["competencia_id"], name: "index_etapas_on_competencia_id", using: :btree
   add_index "etapas", ["etapa_id"], name: "index_etapas_on_etapa_id", using: :btree
 
+  create_table "jueces", force: true do |t|
+    t.string   "nombre_juez"
+    t.string   "apellido_pat_juez"
+    t.string   "apellido_mat_juez"
+    t.decimal  "rut_juez",          precision: 10, scale: 0
+    t.boolean  "sexo_juez"
+    t.date     "fecha_nac_juez"
+    t.string   "email_juez"
+    t.string   "foto_juez"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "jugadors", force: true do |t|
     t.string   "nombre_jug"
     t.string   "apellido_pat_jug"
@@ -184,6 +197,24 @@ ActiveRecord::Schema.define(version: 20141203211552) do
   add_index "rol_cuerpo_tecnicos", ["rol_tecnico_id"], name: "index_rol_cuerpo_tecnicos_on_rol_tecnico_id", using: :btree
   add_index "rol_cuerpo_tecnicos", ["tecnico_id"], name: "index_rol_cuerpo_tecnicos_on_tecnico_id", using: :btree
 
+  create_table "rol_equipo_arbitrals", force: true do |t|
+    t.integer  "rol_jueces_id"
+    t.integer  "jueces_id"
+    t.integer  "encuentros_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rol_equipo_arbitrals", ["encuentros_id"], name: "index_rol_equipo_arbitrals_on_encuentros_id", using: :btree
+  add_index "rol_equipo_arbitrals", ["jueces_id"], name: "index_rol_equipo_arbitrals_on_jueces_id", using: :btree
+  add_index "rol_equipo_arbitrals", ["rol_jueces_id"], name: "index_rol_equipo_arbitrals_on_rol_jueces_id", using: :btree
+
+  create_table "rol_jueces", force: true do |t|
+    t.string   "tipo_rol_juez"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "rol_tecnicos", force: true do |t|
     t.string   "tipo_rol_tec"
     t.datetime "created_at"
@@ -216,8 +247,8 @@ ActiveRecord::Schema.define(version: 20141203211552) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "role"
     t.string   "username"
+    t.string   "role"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
