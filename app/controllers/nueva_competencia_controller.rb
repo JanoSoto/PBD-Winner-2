@@ -519,10 +519,20 @@ class NuevaCompetenciaController < ApplicationController
 						nuevo_rol_cuerpo_tecnico.save
 					end
 				end
-				
-			end
 
-			
+			end
+			#INSERT A LA TABLA JUEZ
+			$jueces.each do |juez|
+				nuevo_juez = Juece.new
+				nuevo_juez.nombre_juez = juez['Nombre']
+				nuevo_juez.apellido_pat_juez = juez['Apellido Paterno']
+				nuevo_juez.apellido_mat_juez = juez['Apellido Materno']
+				nuevo_juez.rut_juez = juez['RUT']
+				nuevo_juez.sexo_juez = juez['Sexo']
+				nuevo_juez.fecha_nac_juez = juez['Fecha nacimiento']
+				nuevo_juez.email_juez = juez['Email']
+				nuevo_juez.save
+			end			
 
 			#COMPETENCIA DE TIPO LIGA
 			if $tipo_competencia == "liga"

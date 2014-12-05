@@ -54,8 +54,9 @@
 							<%= label_tag(:ida_vuelta, "¿Encuentros de ida y vuelta? ") %>
 							<%= radio_button_tag(:ida_vuelta, "ida", true) %>
 							<%= label_tag(:ida_vuelta_ida, "Sólo ida") %>
-							<%= radio_button_tag(:ida_vuelta, "idaVuelta") %>
+							<%= radio_button_tag(:ida_vuelta, "idaVuelta", false, disabled: true, title: "Opción no disponible") %>
 							<%= label_tag(:ida_vuelta_vuelta, "Ida y vuelta") %>
+							<span class="label label-primary">No disponible</span>
 						</div>
 						
 						<div class="field" id="cant_part_normal">
@@ -110,9 +111,9 @@
 
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active"><a href="#Liga" aria-controls="Liga" role="tab" data-toggle="tab">Liga</a></li>
-							<li role="presentation"><a href="#Torneo" aria-controls="Torneo" role="tab" data-toggle="tab">Torneo</a></li>
-							<li role="presentation"><a href="#Copa" aria-controls="Copa" role="tab" data-toggle="tab">Copa</a></li>
+							<li role="presentation" class="active"><a href="#Liga" aria-controls="Liga" role="tab" data-toggle="tab" id="info-liga">Liga</a></li>
+							<li role="presentation"><a href="#Torneo" aria-controls="Torneo" role="tab" data-toggle="tab" id="info-torneo">Torneo</a></li>
+							<li role="presentation"><a href="#Copa" aria-controls="Copa" role="tab" data-toggle="tab" id="info-copa">Copa</a></li>
 						</ul>
 
 						<!-- Tab panes -->
@@ -179,22 +180,30 @@
 		if(document.getElementById("tipo_copa").checked){
 			document.getElementById("cant_grupos").style.display = "block";
 			document.getElementById("cant_clasificados").style.display ="block";
+			document.getElementById("info-copa").click()
 		}
 		else{
 			document.getElementById("cant_grupos").style.display = "none";
 			document.getElementById("cant_clasificados").style.display ="none";
+
 		}
 
 		if(document.getElementById("tipo_torneo").checked){
 			document.getElementById("cant_part_normal").style.display = "none";
 			document.getElementById("cant_part_torneo").style.display = "block";
+			document.getElementById("info-torneo").click()
 		}
 		else{
 			document.getElementById("cant_part_normal").style.display = "block";
 			document.getElementById("cant_part_torneo").style.display = "none";
 		}
 
+		if(document.getElementById("tipo_liga").checked){
+			document.getElementById("info-liga").click()
+		}
+
 
 	}
+
 
 </script>
