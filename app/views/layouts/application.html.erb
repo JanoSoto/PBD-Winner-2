@@ -39,14 +39,14 @@
   <body>
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
-        <a class="navbar-brand" href="/">Winner</a>
+        <a class="navbar-brand" href="/">Winner | gestor de competencias deportivas</a>
 	<% if user_signed_in? %>
-	   <%= link_to "Cerrar sesión", destroy_user_session_path, :method => :delete , class: "btn btn-default navbar-btn pull-right"%>
-      <p class="navbar-text pull-right">Bienvenido <%= current_user.username %> </p>
+	   <%= link_to "Salir", destroy_user_session_path, :method => :delete , class: "btn btn-default navbar-btn pull-right btn-xs"%>
+      <p class="navbar-text pull-right">Bienvenido <%= link_to current_user.username, edit_user_registration_path(current_user) %> </p>
 	<% else %>
            
-<%= link_to 'Registrarse', new_user_registration_path,class: "btn btn-default navbar-btn pull-right" %>
-<a href="/users/sign_in"><button type="button" class="btn btn-default navbar-btn pull-right">Iniciar sesión</button></a>
+<%= link_to 'Registrarse', new_user_registration_path,class: "btn btn-default navbar-btn pull-right btn-xs" %>
+<a href="/users/sign_in"><button type="button" class="btn btn-default navbar-btn pull-right btn-xs">Iniciar sesión</button></a>
 	<% end %>
 	
       </div>
@@ -124,6 +124,5 @@
 		   <p class="text-muted">&copy; Winner 2014</p>
 		</div>
       </footer>
-
   </body>
 </html>

@@ -20,9 +20,38 @@ body {
 }
 
 /*--- Fuentes ---*/
+.home {
+    border: 5px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.pHome{
+	text-align: justify;
+}
 
 h3, .h3 {
     font-size: 20px;
+}
+
+.home h1, h2, h3{
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+.panel-default .panel-heading {
+    background-color: #0069b2;
+    border-color: #ddd;
+    color: #fff;
+}
+
+.navbar-text a{
+    color: #fff;
+}
+
+.navbar-text a:hover {
+    color: #fff;
+	background-color: transparent;
+	text-decoration: underline
 }
 
 /*--- Barra de Navegacion ---*/
@@ -76,6 +105,14 @@ h3, .h3 {
 
 /*--- Slider ---*/
 
+.carousel-inner {
+    border-bottom: 10px solid #bdbdbd;
+	border-top: 5px solid #bdbdbd;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
 .carousel-caption {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
     border-radius: 5px;
@@ -101,7 +138,7 @@ h3, .h3 {
     background: #333;    
     text-align: center;
     height: 300px !important;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;

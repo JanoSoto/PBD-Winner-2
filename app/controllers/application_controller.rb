@@ -8,8 +8,11 @@ class ApplicationController < ActionController::Base
   #Obliga al usuario a estar autenticado para poder acceder a cualquier parte de la app
   #Todas las vistas a las que si se puede acceder sin estar logeado van dentro de los corchetes
   before_action :authenticate_user!, :except => [:index]
+  
+  before_filter :configure_permitted_parameters, if: :devise_controller?
+  
   protected
   def configure_permitted_parameters
-  	devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:username,:email,:password,:password_confirmation)}
+  	devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:username,:email,:password,:password_confirmation, roles: [])}
   end 		  
 end
