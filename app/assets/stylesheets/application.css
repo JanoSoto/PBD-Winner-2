@@ -44,6 +44,16 @@ h3, .h3 {
     color: #fff;
 }
 
+.navbar-text a{
+    color: #fff;
+}
+
+.navbar-text a:hover {
+    color: #fff;
+	background-color: transparent;
+	text-decoration: underline
+}
+
 /*--- Barra de Navegacion ---*/
 
 .navbar-default {
@@ -128,7 +138,7 @@ h3, .h3 {
     background: #333;    
     text-align: center;
     height: 300px !important;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
