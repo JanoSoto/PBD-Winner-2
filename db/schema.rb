@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141204225841) do
+ActiveRecord::Schema.define(version: 20141205221057) do
 
   create_table "competencia", force: true do |t|
     t.string   "nombre_comp"
@@ -249,6 +249,7 @@ ActiveRecord::Schema.define(version: 20141204225841) do
     t.datetime "updated_at"
     t.string   "role"
     t.string   "username"
+    t.integer  "roles_mask",             default: 2
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

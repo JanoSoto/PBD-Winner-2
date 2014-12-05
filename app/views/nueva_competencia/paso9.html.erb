@@ -22,63 +22,171 @@
 		<% end %>	
 		<% i += 1 %>
 	<% end %>-->
-
+	
 <div class="creacion-compentencia" role="tabpanel">
-		<ul class="nav nav-tabs" role="tablist">
-			
-			<% i = 1 %>
-			<% $fixture.each do |fecha| %>
-			
-			<% if i == 1%>
-				<li role="presentation"><a href="#Fecha<%= i %>" aria-controls="Fecha<%= i %>" role="tab" data-toggle="tab" id="fecha-1">Fecha <%= i %></a></li>
-			<% else %>
-				<li role="presentation" ><a href="#Fecha<%= i %>" aria-controls="Fecha<%= i %>" role="tab" data-toggle="tab">Fecha <%= i %></a></li>
-			<% end %>
-					<% i += 1 %>
-			<% end %>
-			
-		</ul> 
-		<div class="tab-content">
-			<% i = 1 %>
-			<% $fixture.each do |fecha| %>
-			<div role="tabpanel" class="tab-pane fade in active" id="Fecha<%= i %>">
-				<table class="table table-bordered table-hover">
-					<thead>
-						<tr>
-							<th>Local</th>
-							<th>Visita</th>
-							<th>Fecha</th>
-							<th>Hora</th>
-							<th>Recinto deportivo</th>
-						</tr>
-					</thead>
-					<tbody>
-						<% fecha.each do |encuentro| %>
-						<tr>
-							<td><%= encuentro[0]["Nombre"] %></td>
-							<td><%= encuentro[1]["Nombre"] %></td>
-							<td>    
-								  <%= date_select(:fecha, :fecha_inicio, :order => [:day, :month, :year], start_year: Date.today.year, end_year: Date.today.year+5) %>
-							</td>
-							<td>
-								<%= time_field_tag(:task, nil) %>
-							</td>
-							<td>
-								<select class="input-large form-control">>
-									<% $recintos.each do |recinto| %>
-								  		<option value="<%= recinto['Nombre'] %>"><%= recinto['Nombre'] %></option>
-								  <% end %>
-								</select>								
-							</td>
-						</tr>
-						<% end %>
+	<div class="panel-heading  panel panel-default">
+		<h3>Crear Competencia - Definir encuentros - Paso 9</h3>
+	</div>
+		<% if $tipo_competencia.swapcase == "LIGA"%>
+			<%="soy liga"%>
+		
+		
 
-					</tbody>
-				</table>
-			</div>	
-			<% i += 1 %>
-			<% end %>		
-		</div>
+			<ul class="nav nav-tabs" role="tablist">
+				
+				<% i = 1 %>
+				<% $fixture.each do |fecha| %>
+				
+				<% if i == 1%>
+					<li role="presentation"><a href="#Fecha<%= i %>" aria-controls="Fecha<%= i %>" role="tab" data-toggle="tab" id="fecha-1">Fecha <%= i %></a></li>
+				<% else %>
+					<li role="presentation" ><a href="#Fecha<%= i %>" aria-controls="Fecha<%= i %>" role="tab" data-toggle="tab"  id="fecha-<%= i %>">Fecha <%= i %></a></li>
+				<% end %>
+						<% i += 1 %>
+				<% end %>
+				
+			</ul> 
+			<div class="tab-content">
+				<% i = 1 %>
+				<% $fixture.each do |fecha| %>
+				<div role="tabpanel" class="tab-pane fade in active" id="Fecha<%= i %>">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>Local</th>
+								<th>Visita</th>
+								<th>Fecha y Hora</th>
+								<th>Recinto deportivo</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% j = 1 %>
+							<% fecha.each do |encuentro| %>
+							
+							<%=i%><%=j%>
+							<tr>
+								<td><%= encuentro[0]["Nombre"] %></td>
+								<td><%= encuentro[1]["Nombre"] %></td>
+								<td>
+									<%=datetime_select("Fecha"+i.to_s+j.to_s, "written_on", :order => [:day, :month, :year], start_year: Date.today.year)%>
+								</td>
+								<td>
+									<%
+										nombre_recintos = Array.new
+										$recintos.each do |recinto|
+											nombre_recintos.push(recinto["Nombre"])
+										end
+									%>
+									<%= select_tag("nomb_rec"+i.to_s+j.to_s, options_for_select(nombre_recintos)) %>
+															
+								</td>
+								<td></td>
+							</tr>
+							<% j += 1 %>
+							<% end %>
+
+						</tbody>
+					</table>
+				</div>	
+				<% i += 1 %>
+				<% end %>		
+			</div>
+		<% end %>
+		<% if $tipo_competencia.swapcase == "TORNEO"%>
+			<%="soy torneo"%>
+			<ul class="nav nav-tabs" role="tablist">
+				
+				
+				<% for i in 1..$cant_fases %>				
+				
+					<% if $cant_fases-i == 0%>
+						<li role="presentation"><a href="#Fase0" aria-controls="Fase0" role="tab" data-toggle="tab" id="fecha-1">Final</a></li>
+					<% end %>	
+					<% if $cant_fases-i == 1%>
+						<li role="presentation"><a href="#Fase1" aria-controls="Fase1" role="tab" data-toggle="tab"> Semifinales</a></li>
+					<% end %>
+					<% if $cant_fases-i == 2%>
+						<li role="presentation"><a href="#Fase2" aria-controls="Fase2" role="tab" data-toggle="tab" >Cuartos de final</a></li>
+					<% end %>
+					<% if $cant_fases-i == 3%>
+						<li role="presentation"><a href="#Fase3" aria-controls="Fase3" role="tab" data-toggle="tab"> Octavos de final</a></li>					
+					<% end %>
+					<% if $cant_fases-i == 4%>
+						<li role="presentation"><a href="#Fase4" aria-controls="Fase4" role="tab" data-toggle="tab"> 16avos de Final</a></li>					
+					<% end %>
+					<% if $cant_fases-i == 5%>
+						<li role="presentation"><a href="#Fase5" aria-controls="Fase5" role="tab" data-toggle="tab"> 32avos de Final</a></li>					
+					<% end %>						
+				<% end %>				
+			</ul>
+			<div class="tab-content">
+				<%i=0 %>
+				<%while i < $cant_fases %>
+					<div role="tabpanel" class="tab-pane fade in active" id="Fase<%= i %>">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Local</th>
+									<th>Visita</th>
+									<th>Fecha y Hora</th>
+									<th>Recinto deportivo</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% j = 0 %>
+								<% limite = 1%>
+								<%if i == 0%>
+									<%limite = 1%>
+								<%end%>
+								<%if i == 1%>
+									<%limite = 2%>
+								<%end%>
+								<%if i == 2%>
+									<%limite = 4%>
+								<%end%>
+								<%if i == 3%>
+									<%limite = 8%>
+								<%end%>
+								<%if i == 4%>
+									<%limite = 16%>
+								<%end%>
+								<%if i == 5%>
+									<%limite = 32%>
+								<%end%>
+								<% while j < limite %>
+								<tr>
+									<td>
+										<!--<%if limite == $ids_etapas.length%>-->
+											
+										<%end%>
+									</td>
+									<td></td>
+									<td>
+										<%=datetime_select("Fecha", "written_on", :order => [:day, :month, :year],start_year: Date.today.year)%>
+									</td>
+									<td>
+										<select class="input-large form-control">>
+											<% $recintos.each do |recinto| %>
+										  		<option value="<%= recinto['Nombre'] %>"><%= recinto['Nombre'] %></option>
+										  <% end %>
+										</select>								
+									</td>
+
+								</tr>
+								<% j+= 1 %>
+							<% end %>
+							</tbody>
+						</table>
+						<% i+= 1%>
+					</div>
+				<% end %>
+
+
+
+			</div> 
+
+
+		<% end %>
 
 	</div>	
 
