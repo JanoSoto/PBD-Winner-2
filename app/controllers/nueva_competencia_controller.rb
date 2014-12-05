@@ -770,6 +770,59 @@ class NuevaCompetenciaController < ApplicationController
 							i += 1
 					end  
 				end
+
+				#GENERACIÓN DE LA SEGUNDA FASE
+
+				#DETERMINACIÓN DE LA CANTIDAD DE PARTICIPANTES DE LA SEGUNDA FASE
+				part_fase2 = $cant_clasificados.to_i * $cant_grupos.to_i
+				for i in(1..9)
+					if part_fase2 > 2**i && part_fase2 <= 2**(i+1)
+						part_fase2 = 2**(i+1)
+					end
+				end
+
+				#CREACIÓN DE LAS ETAPAS DE LA SEGUNDA FASE
+				num_fases = Math.log($cant_participantes.to_i)/Math.log(2)
+				id_etapa_siguiente = nil
+				ids_aux = Array.new
+				id_etapa_final = nil
+				for i in(0..num_fases-1)
+					cont = 1
+					(2**i).times do 
+						etapa = Etapa.new
+						if i == 0
+							etapa.nombre_etp = "Final"
+						elsif i == 1
+							etapa.nombre_etp = "Semi Final"
+						elsif i == 2
+							etapa.nombre_etp = "Cuartos de Final"
+						elsif i == 3
+							etapa.nombre_etp = "Octavos de Final"
+						elsif i == 4 
+							etapa.nombre_etp = "16avos de Final"
+						elsif i == 5
+							etapa.nombre_etp = "32avos de Final"				
+						end
+						etapa.tipo_etp = 0
+						etapa.competencia_id = competencia.id
+						if cont%2 == 1
+							etapa.etapa_id = ids_aux[0]
+							cont += 1
+						elsif cont%2 == 0
+							etapa.etapa_id = ids_aux.shift
+							cont += 1
+						end	
+						etapa.save
+						ids_aux.push(etapa.id)
+						if i == 0
+							etapa_aux = Etapa.find_by(ids_fechas_copa.last)
+							etapa_aux.etapa_id = etapa.id
+							etapa_aux.save
+						end
+					end
+					id_etapa_siguiente = etapa.id
+				end
+
 			end
 					
 			redirect_to action: 'paso9'
