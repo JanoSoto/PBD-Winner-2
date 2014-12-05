@@ -1,4 +1,4 @@
- # encoding: UTF-8
+ # encoding: UTF-8 
 class NuevaCompetenciaController < ApplicationController
 	@volver = false
 	def paso1
@@ -39,9 +39,9 @@ class NuevaCompetenciaController < ApplicationController
 		if request.post?
 			if $fecha_fin < $fecha_inicio
 				@alert = 'La fecha de inicio es posterior a la fecha de fin. Por favor, ingrese un fecha valida'
-			elsif $cant_grupos != 0 && $cant_participantes % $cant_grupos != 0
+			elsif $cant_grupos.to_i != 0 && $cant_participantes.to_i % $cant_grupos.to_i != 0
 				@alert = 'La cantidad de grupos no coincide con la cantidad de participantes. Es estrictamente necesario que cada grupo tenga la misma cantidad de participantes.'
-			elsif $cant_grupos != 0 && $cant_clasificados.to_i > $cant_participantes.to_i/$cant_grupos.to_i-1
+			elsif $cant_grupos.to_i != 0 && $cant_clasificados.to_i > $cant_participantes.to_i/$cant_grupos.to_i-1
 				@alert = 'La cantidad de clasificados no puede ser mayor o igual que la cantidad de participantes por grupo'
 			else
 				redirect_to action: 'paso2'
@@ -71,7 +71,7 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'La cantidad máxima de jugadores es inferior a la cantidad de jugadores titulares más la cantidad de jugadores en banca'	
 			elsif $cant_cambios.to_i > $cant_banca.to_i
 				@alert = 'La cantidad máxima de cambios permitidos es mayor que la cantidad de jugadores en banca'
-			elsif @volver
+			elsif @volver_paso1
 				redirect_to action: 'paso1'
 			else
 				redirect_to action: 'paso3'
@@ -90,10 +90,13 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$participantes.each do |participante|
 			if participante['Nombre'] == nil || participante['Pais'] == nil
 				campo_vacio = true
+			elsif participante['Nombre'] !~ /^([A-Z]|[a-z]|\s|\d)*/ || participante['Pais'] !~ /^([A-Z]|[a-z])*/
+				campo_invalido = true
 			end
 		end
 
@@ -111,7 +114,7 @@ class NuevaCompetenciaController < ApplicationController
 				end
 			end
 		end
-		$cant_participantes = $participantes.length
+		#$cant_participantes = $participantes.length
 		$participantes.sort! {|x,y| x['Nombre'] <=> y['Nombre']}
 
 		if request.post?
@@ -119,6 +122,11 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay nombres de participantes que están repetidos'
+			elsif $cant_participantes.to_i != $participantes.length
+				@alert = 'La cantidad de participantes del archivo no coincide con la indicada en un principio. Cantidad indicada: '+$cant_participantes.to_s+'  - Cantidad en el archivo: '+$participantes.length.to_s
+				@noCoinciden = true	
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. El nombre no puede contener caracteres especiales (-, /, \', !, etc) y el país no puede contener números ó caracteres especiales'	
 			else
 				redirect_to action: 'paso4'
 			end
@@ -135,15 +143,17 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$jugadores.each do |jugador|
-			puts jugador
 			if jugador['Institucion Deportiva'] == nil || jugador['Nombre'] == nil || jugador['Apellido Paterno'] == nil || jugador['Apellido Materno'] == nil || jugador['RUT'] == nil || jugador['Sexo'] == nil || jugador['Fecha nacimiento'] == nil || jugador['Email'] == nil
 				campo_vacio = true
+			elsif jugador['Nombre'] !~ /^([A-Z]|[a-z])*/ || jugador['Apellido Paterno'] !~ /^([A-Z]|[a-z])*/ || jugador['Apellido Materno'] !~ /^([A-Z]|[a-z])*/ || jugador['Sexo'] !~ /^M{1}|F{1}/ || jugador['RUT'] !~ /^\d{8}-(\d|k)/ || jugador['Fecha nacimiento'] !~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || jugador['Email'] !~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true	
 			end
 		end
 
-
+		#VERIFICA QUE NO HAYAN REPETIDOS
 		if $jugadores != [] && $jugadores != nil
 			for i in (0..$jugadores.length-1)
 				for j in(i+1..$jugadores.length)
@@ -158,6 +168,19 @@ class NuevaCompetenciaController < ApplicationController
 			end
 		end
 
+		#VERIFICA SI TODOS LOS JUGADORES TIENEN UNA INSTITUCIÓN DEPORTIVA VÁLIDA
+		jugador_sin_club = false
+		$jugadores.each do |jugador|
+			flag = 0
+			$participantes.each do |participante|
+				if jugador['Institucion Deportiva'] == participante['Nombre']
+					flag += 1
+				end
+			end
+			if flag == 0
+				jugador_sin_club = true
+			end
+		end
 		
 		$jugadores.sort! {|x,y| x['Institucion Deportiva'] <=> y['Institucion Deportiva']}
 
@@ -166,6 +189,10 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay jugadores que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'	
+			elsif jugador_sin_club
+				@alert = 'Hay uno o más jugadores cuyas Instituciones Deportivas indicadas no coinciden con las registradas previamente. Compruebe el uso de mayúsculas y minúsculas.'	
 			else
 				redirect_to action: 'paso5'
 			end
@@ -182,11 +209,13 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$entrenadores.each do |entrenador|
-			puts entrenador
 			if entrenador['Institucion Deportiva'] == nil || entrenador['Nombre'] == nil || entrenador['Apellido Paterno'] == nil || entrenador['Apellido Materno'] == nil || entrenador['RUT'] == nil || entrenador['Sexo'] == nil || entrenador['Fecha nacimiento'] == nil || entrenador['Email'] == nil
 				campo_vacio = true
+			elsif entrenador['Nombre'] !~ /^([A-Z]|[a-z])*/ || entrenador['Apellido Paterno'] !~ /^([A-Z]|[a-z])*/ || entrenador['Apellido Materno'] !~ /^([A-Z]|[a-z])*/ || entrenador['Sexo'] !~ /^M{1}|F{1}/ || entrenador['RUT'] !~ /^\d{8}-(\d|k)/ || entrenador['Fecha nacimiento'] !~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || entrenador['Email'] !~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true
 			end
 		end
 
@@ -205,11 +234,29 @@ class NuevaCompetenciaController < ApplicationController
 			end
 		end
 
+		#VERIFICA SI TODOS LOS ENTRENADORES TIENEN UNA INSTITUCIÓN DEPORTIVA VÁLIDA
+		entrenador_sin_club = false
+		$entrenadores.each do |entrenador|
+			flag = 0
+			$participantes.each do |participante|
+				if entrenador['Institucion Deportiva'] == participante['Nombre']
+					flag += 1
+				end
+			end
+			if flag == 0
+				entrenador_sin_club = true
+			end
+		end
+
 		if request.post?
 			if campo_vacio
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay entrenadores que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'
+			elsif entrenador_sin_club
+				@alert = 'Hay uno o más entrenadores cuyas Instituciones Deportivas indicadas no coinciden con las registradas previamente. Compruebe el uso de mayúsculas y minúsculas.'	
 			else
 				redirect_to action: 'paso6'
 			end
@@ -226,11 +273,13 @@ class NuevaCompetenciaController < ApplicationController
 
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$jueces.each do |juez|
-			puts juez
 			if juez['Nombre'] == nil || juez['Apellido Paterno'] == nil || juez['Apellido Materno'] == nil || juez['RUT'] == nil || juez['Sexo'] == nil || juez['Fecha nacimiento'] == nil || juez['Email'] == nil
 				campo_vacio = true
+			elsif juez['Nombre'] !~ /^([A-Z]|[a-z])*/ || juez['Apellido Paterno'] !~ /^([A-Z]|[a-z])*/ || juez['Apellido Materno'] !~ /^([A-Z]|[a-z])*/ || juez['Sexo'] !~ /^M{1}|F{1}/ || juez['RUT'] !~ /^\d{8}-(\d|k)/ || juez['Fecha nacimiento'] !~ /^(\d{1,2})\/(\d{1,2})\/(\d{4})/ || juez['Email'] !~ /^([a-z]|\d)*\@([a-z]|\d)*\.[a-z]*/
+				campo_invalido = true
 			end
 		end
 
@@ -254,6 +303,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay jueces que están inscritos dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Tanto el Nombre como los Apellidos no pueden contener caracteres especiales ni números. El RUT debe ser en el formato 12345678-k. El sexo puede ser indicado como F en caso de ser Femenino o M en el caso de ser Masculino. La fecha de nacimiento debe ser en el formato dd/mm/aaaa'
 			else
 				redirect_to action: 'paso7'
 			end
@@ -270,11 +321,13 @@ class NuevaCompetenciaController < ApplicationController
 		
 		nombre_repetido = false
 		campo_vacio = false
+		campo_invalido = false
 
 		$recintos.each do |recinto|
-			puts recinto
 			if recinto['Nombre'] == nil || recinto['Ciudad'] == nil || recinto['Pais'] == nil || recinto['Capacidad'] == nil 
 				campo_vacio = true
+			elsif recinto['Nombre'] !~ /^([A-Z]|[a-z])*/ || recinto['Ciudad'] !~ /^([A-Z]|[a-z])*/ || recinto['Pais'] !~ /^([A-Z]|[a-z])*/ || recinto['Capacidad'] !~ /^\d*/ 
+				campo_invalido = true					
 			end
 		end
 
@@ -298,6 +351,8 @@ class NuevaCompetenciaController < ApplicationController
 				@alert = 'Hay campos del archivo que están vacíos. Por favor revise que el archivo siga el formato adecuado'
 			elsif nombre_repetido
 				@alert = 'Hay recintos deportivos que están registrados dos veces'
+			elsif campo_invalido
+				@alert = 'Alguno de los campos del archivo no coincide con el formato solicitado. Los campos Nombre, Ciudad y País no pueden contener números ni caracteres especiales. La cantidad debe ser expresada sólo en números naturales'	
 			else
 				redirect_to action: 'paso8'
 			end
@@ -469,7 +524,7 @@ class NuevaCompetenciaController < ApplicationController
 
 			
 
-			#GENERACIÓN DEL FIXTURE
+			#COMPETENCIA DE TIPO LIGA
 			if $tipo_competencia == "liga"
 				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES
 				$ids_etapas = Array.new
@@ -527,7 +582,7 @@ class NuevaCompetenciaController < ApplicationController
 					iteracion1 = false
 				end
 
-
+				#REGISTRO DE LOS ENCUENTROS
 				i = 0
 				$fixture.each do |fecha|
 					fecha.each do |encuentro|
@@ -553,11 +608,168 @@ class NuevaCompetenciaController < ApplicationController
 					i += 1
 				end
 			
-
+			#COMPETENCIA DE TIPO TORNEO
 			elsif $tipo_competencia == "torneo"
+				#CREACIÓN DE LAS ETAPAS CORRESPONDIENTES Y GENERACIÓN DEL FIXTURE
+				ids_etapas = Array.new
+				ids_aux = Array.new
+				id_etapa_siguiente = nil
+				for i in(0..$cant_fases.to_i-1)
+					cont = 1
+					(2**i).times do 
+						etapa = Etapa.new
+						if i == 0
+							etapa.nombre_etp = "Final"
+						elsif i == 1
+							etapa.nombre_etp = "Semi Final"
+						elsif i == 2
+							etapa.nombre_etp = "Cuartos de Final"
+						elsif i == 3
+							etapa.nombre_etp = "Octavos de Final"
+						elsif i == 4 
+							etapa.nombre_etp = "16avos de Final"
+						elsif i == 5
+							etapa.nombre_etp = "32avos de Final"				
+						end
+						etapa.tipo_etp = 0
+						etapa.competencia_id = competencia.id
+						if cont%2 == 1
+							etapa.etapa_id = ids_aux[0]
+							cont += 1
+						elsif cont%2 == 0
+							etapa.etapa_id = ids_aux.shift
+							cont += 1
+						end	
+						etapa.save
+						ids_aux.push(etapa.id)
+						if 2**i == 2**($cant_fases.to_i-1)
+							ids_etapas.push({'id'=>etapa.id, 'nombre'=>etapa.nombre_etp})
+						end
+					end
+					id_etapa_siguiente = etapa.id
+				end
 
+				#REGISTRO DE LOS ENCUENTROS
+				contAux = 0
+				for i in(0..ids_etapas.length-1)
+					nuevo_encuentro = Encuentro.new						
+					nuevo_encuentro.id_local = ids_participantes[contAux]['id']
+					contAux += 1	
+					nuevo_encuentro.id_visita = ids_participantes[contAux]['id']
+					contAux += 1
+					nuevo_encuentro.competencia_id = competencia.id
+					nuevo_encuentro.etapa_id = ids_etapas[i]['id']
+					nuevo_encuentro.estado_enc = "POR JUGAR"
+					nuevo_encuentro.save
+				end
+
+			#COMPETENCIAS DE TIPO COPA
 			else
+				#SEPARACIÓN DE LOS GRUPOS
+				part_por_grupo = $cant_participantes.to_i/$cant_grupos.to_i
+				$grupos_copa = Array.new($cant_grupos.to_i){Array.new}
+				contAux = 0
+				$grupos_copa.each do |grupo|
+					part_por_grupo.times do
+						grupo.push(ids_participantes[contAux])
+						contAux += 1
+					end
+				end
 
+				contAux = 1
+				$grupos_copa.each do |grupo|
+					grupo.each do |participante|
+						part_aux = ParticipanteCompetencium.find_by(participante_id: participante['id'])
+						part_aux.grupo_par_com = contAux
+						part_aux.save
+					end
+					contAux += 1
+				end
+
+				cant_part_por_grupo = 0
+				$fixture_grupo = Array.new
+				$grupos_copa.each do |grupo|
+					#GENERACIÓN DEL FIXTURE DE CADA GRUPO EN UNA MATRIZ
+					if part_por_grupo % 2 == 0
+						cant_part_por_grupo = part_por_grupo-1
+					else
+						cant_part_por_grupo = part_por_grupo
+					end
+							
+					fixture_aux = Array.new(cant_part_por_grupo) {Array.new(grupo.length/2){Array.new(2)}}
+					equipo1 = grupo.length-2
+					equipo2 = 0
+					alterna = true
+					
+					fixture_aux.each do |fecha|
+						iteracion1 = true
+						fecha.each do |encuentro|
+							if iteracion1
+								if alterna							
+									encuentro[0] = grupo[equipo1]	
+									equipo1 -= 1
+									encuentro[1] = grupo[grupo.length-1]
+									alterna = false
+								else
+									encuentro[1] = grupo[equipo1]	
+									equipo1 -= 1
+									encuentro[0] = grupo[grupo.length-1]
+									alterna = true
+								end
+								iteracion1 = false
+							else
+								encuentro[0] = grupo[equipo1]	
+								equipo1 -= 1
+								encuentro[1] = grupo[equipo2]
+								equipo2 += 1
+							end
+
+							if equipo1 < 0
+								equipo1 = grupo.length-2
+							end
+							if equipo2 > grupo.length-2
+								equipo2 = 0
+							end
+						end
+						iteracion1 = false
+					end
+					fixture_aux.each do |fase|
+					end
+					$fixture_grupo.push(fixture_aux)
+				end
+
+				#CREACIÓN DE LAS ETAPAS DE LA FASE DE GRUPOS
+				numFase = cant_part_por_grupo
+				fecha_siguiente = nil
+				ids_fechas_copa = Array.new
+				cant_part_por_grupo.times do
+					nueva_fase = Etapa.new
+					nueva_fase.nombre_etp = "Fecha "+numFase.to_s+"- Fase de Grupos"
+					nueva_fase.tipo_etp = 0
+					nueva_fase.competencia_id = competencia.id
+					nueva_fase.etapa_id = fecha_siguiente
+					nueva_fase.save
+					ids_fechas_copa.push(nueva_fase.id)
+					fecha_siguiente = nueva_fase.id
+					numFase -= 1
+				end
+
+				#REGISTRO DE LOS ENCUENTROS
+				$fixture_grupo.each do |fixture|
+						i = 0
+					fixture.each do |fecha|
+						fecha.each do |encuentro|
+							nuevo_encuentro = Encuentro.new
+							nuevo_encuentro.id_local = encuentro[0]['id']
+							nuevo_encuentro.id_visita = encuentro[1]['id']
+							nuevo_encuentro.competencia_id = competencia.id
+							nuevo_encuentro.etapa_id = ids_fechas_copa[i]
+							nuevo_encuentro.estado_enc = "POR JUGAR"
+							nuevo_encuentro.save
+						end
+							i += 1
+					end  
+				end
 			end
 					
 			redirect_to action: 'paso9'

@@ -10,6 +10,7 @@
 
 <div class="container">
 	<div class="row">
+		<% if $nombre_competencia != nil && $tipo_competencia != nil && $ida_vuelta != nil && $cant_participantes != nil && $cant_grupos != nil && $fecha_inicio != nil && $fecha_fin != nil && $privacidad != nil %>
 		<div class="col-md-7">
 			<div class="formulario-creacion panel panel-default">
 				<div class="panel-heading">
@@ -47,11 +48,6 @@
 							<%= number_field(:banca, :jug_banca, in: 0..11, step: 1, value: 0) %>
 						</div>
 						<br><br><br>
-						<button class="col-md-offset-1">
-							<%#= link_to("Volver", :back) %>
-							<!--a href="javascript:window.history.back();">&laquo; Volver atrás</a-->
-							<button class="btn btn-default" id="volver">Volver</button>
-						</button>
 						<span class="col-md-offset-7">
 							<%= submit_tag("Siguiente")%>
 						</span>
@@ -106,6 +102,13 @@
 				</div>
 			</div>
 		</div>
+		<% else %>
+			<div class="col-md-12">
+				<h3>Hay pasos previos que aún no se han realizado</h3>
+				<% @volver_paso1 = true %>
+				<a href="/nueva_competencia/paso1" class="btn btn-warning">Volver al inicio</a>
+			</div>
+		<% end %>
 	</div>
 </div>
 

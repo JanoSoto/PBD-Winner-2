@@ -10,6 +10,7 @@
 
 <div class="container">
 	<div class="row">
+		<% if $nombre_competencia != nil && $tipo_competencia != nil && $ida_vuelta != nil && $cant_participantes != nil && $cant_grupos != nil && $fecha_inicio != nil && $fecha_fin != nil && $privacidad != nil %>
 		<div class="col-md-7">
 			<div class="formulario-creacion panel panel-default">
 				<div class="panel-heading">
@@ -22,11 +23,15 @@
 							<li>Puede ser formato csv, Excel o Libre Oficce</li>
 							<li>La primera fila del archivo debe contener las cabeceras <b>Nombre</b> y <b>Pais</b>, tal cual están escritos</li>
 							<li>Ningún campo puede estar vacío</li>
+							<li>La cantidad de participantes debe ser igual a la indicada en el Paso 1</li>
 						</ul>
 					</div>
 					<% if @alert %>
 						<div class="alert alert-danger" role="alert">
 							<b>ERROR: </b><%= @alert %>
+							<% if @noCoinciden %>
+								 <p><a class="btn btn-danger" href="/nueva_competencia/paso1">Ir al paso 1</a></p>
+							<% end %>
 						</div>
 					<% end %>
 					<%= form_tag("/nueva_competencia/paso3", multipart: true) do %>
@@ -106,5 +111,14 @@
 				</div>
 			</div>
 		</div>
+		<% else %>
+			<div class="col-md-12">
+				<div class="alert alert-warning">
+					<h3><b>¡Atención!</b>  Hay pasos previos que aún no se han realizado</h3>
+					<% @volver_paso1 = true %>
+					<a href="/nueva_competencia/paso1" class="btn btn-warning">Volver al inicio</a>
+				</div>
+			</div>
+		<% end %>
 	</div>
 </div>
