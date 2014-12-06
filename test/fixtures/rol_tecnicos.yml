@@ -1,7 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  tipo_rol_tec: MyString
-
-two:
-  tipo_rol_tec: MyString
