@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  competencia_id: 
+  participante_id: 
+  enc_ganados_par_com: 1
+  enc_perdidos_par_com: 1
+  enc_perdidos_par_com: 1
+  goles_favor_par_com: 1
+  goles_contra_par_com: 1
+  cant_tarjetas_amar_par_com: 1
+  cant_tarjetas_roja_par_com: 1
+  cant_puntos_par_com: 1
+  cant_enc_jugados_par_com: 1
+  grupo_par_com: 1
+  total_enc_grupo_par_com: 1
+
+two:
+  competencia_id: 
+  participante_id: 
+  enc_ganados_par_com: 1
+  enc_perdidos_par_com: 1
+  enc_perdidos_par_com: 1
+  goles_favor_par_com: 1
+  goles_contra_par_com: 1
+  cant_tarjetas_amar_par_com: 1
+  cant_tarjetas_roja_par_com: 1
+  cant_puntos_par_com: 1
+  cant_enc_jugados_par_com: 1
+  grupo_par_com: 1
+  total_enc_grupo_par_com: 1

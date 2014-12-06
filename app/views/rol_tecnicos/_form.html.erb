@@ -1,0 +1,21 @@
+<%= form_for(@rol_tecnico) do |f| %>
+  <% if @rol_tecnico.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@rol_tecnico.errors.count, "error") %> prohibited this rol_tecnico from being saved:</h2>
+
+      <ul>
+      <% @rol_tecnico.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :tipo_rol_tec %><br>
+    <%= f.text_field :tipo_rol_tec %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  encuentro_id: 
+  convocatoria_id: 
+  equ_citado: MyString
+
+two:
+  encuentro_id: 
+  convocatoria_id: 
+  equ_citado: MyString

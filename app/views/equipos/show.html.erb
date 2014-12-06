@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Encuentro:</strong>
+  <%= @equipo.encuentro %>
+</p>
+
+<p>
+  <strong>Convocatoria:</strong>
+  <%= @equipo.convocatoria %>
+</p>
+
+<p>
+  <strong>Equ citado:</strong>
+  <%= @equipo.equ_citado %>
+</p>
+
+<%= link_to 'Edit', edit_equipo_path(@equipo) %> |
+<%= link_to 'Back', equipos_path %>

@@ -1,0 +1,49 @@
+<%= form_for(@juece) do |f| %>
+  <% if @juece.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@juece.errors.count, "error") %> prohibited this juece from being saved:</h2>
+
+      <ul>
+      <% @juece.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nombre_juez %><br>
+    <%= f.text_field :nombre_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :apellido_pat_juez %><br>
+    <%= f.text_field :apellido_pat_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :apellido_mat_juez %><br>
+    <%= f.text_field :apellido_mat_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :rut_juez %><br>
+    <%= f.text_field :rut_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :sexo_juez %><br>
+    <%= f.check_box :sexo_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :fecha_nac_juez %><br>
+    <%= f.date_select :fecha_nac_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :email_juez %><br>
+    <%= f.text_field :email_juez %>
+  </div>
+  <div class="field">
+    <%= f.label :foto_juez %><br>
+    <%= f.text_field :foto_juez %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

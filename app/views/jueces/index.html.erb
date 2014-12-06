@@ -1,0 +1,39 @@
+<h1>Listing jueces</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre juez</th>
+      <th>Apellido pat juez</th>
+      <th>Apellido mat juez</th>
+      <th>Rut juez</th>
+      <th>Sexo juez</th>
+      <th>Fecha nac juez</th>
+      <th>Email juez</th>
+      <th>Foto juez</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @jueces.each do |juece| %>
+      <tr>
+        <td><%= juece.nombre_juez %></td>
+        <td><%= juece.apellido_pat_juez %></td>
+        <td><%= juece.apellido_mat_juez %></td>
+        <td><%= juece.rut_juez %></td>
+        <td><%= juece.sexo_juez %></td>
+        <td><%= juece.fecha_nac_juez %></td>
+        <td><%= juece.email_juez %></td>
+        <td><%= juece.foto_juez %></td>
+        <td><%= link_to 'Show', juece %></td>
+        <td><%= link_to 'Edit', edit_juece_path(juece) %></td>
+        <td><%= link_to 'Destroy', juece, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Juece', new_juece_path %>

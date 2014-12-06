@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Nombre juez:</strong>
+  <%= @juece.nombre_juez %>
+</p>
+
+<p>
+  <strong>Apellido pat juez:</strong>
+  <%= @juece.apellido_pat_juez %>
+</p>
+
+<p>
+  <strong>Apellido mat juez:</strong>
+  <%= @juece.apellido_mat_juez %>
+</p>
+
+<p>
+  <strong>Rut juez:</strong>
+  <%= @juece.rut_juez %>
+</p>
+
+<p>
+  <strong>Sexo juez:</strong>
+  <%= @juece.sexo_juez %>
+</p>
+
+<p>
+  <strong>Fecha nac juez:</strong>
+  <%= @juece.fecha_nac_juez %>
+</p>
+
+<p>
+  <strong>Email juez:</strong>
+  <%= @juece.email_juez %>
+</p>
+
+<p>
+  <strong>Foto juez:</strong>
+  <%= @juece.foto_juez %>
+</p>
+
+<%= link_to 'Edit', edit_juece_path(@juece) %> |
+<%= link_to 'Back', jueces_path %>
